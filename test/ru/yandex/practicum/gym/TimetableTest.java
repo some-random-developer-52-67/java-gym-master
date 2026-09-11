@@ -2,6 +2,9 @@ package ru.yandex.practicum.gym;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.yandex.practicum.gym.Age.ADULT;
@@ -234,6 +237,120 @@ public class TimetableTest {
                         new TimeOfDay(13, 0)
                 ).iterator().next()
         );
+    }
+
+    @Test
+    void testGetCountByCoachesForEmptyTimetable() {
+        Timetable timetable = new Timetable();
+
+        assertEquals(0, timetable.getCountByCoaches().size());
+    }
+
+    @Test
+    void testGetCountByCoachesForOneCoach() {
+        Timetable timetable = new Timetable();
+        Coach coach = new Coach("Иванов", "Иван", "Иваныч");
+
+        Group group1 = new Group("Физ-ра", CHILD, 60);
+        TrainingSession firstTrainingSession = new TrainingSession(
+                group1,
+                coach,
+                MONDAY,
+                new TimeOfDay(10, 0)
+        );
+        Group group2 = new Group("Футбол", ADULT, 90);
+        TrainingSession secondTrainingSession = new TrainingSession(
+                group2,
+                coach,
+                TUESDAY,
+                new TimeOfDay(11, 0)
+        );
+        Group group3 = new Group("Плавание", ADULT, 60);
+        TrainingSession thirdTrainingSession = new TrainingSession(
+                group3,
+                coach,
+                WEDNESDAY,
+                new TimeOfDay(12, 0)
+        );
+
+
+        timetable.addNewTrainingSession(firstTrainingSession);
+        timetable.addNewTrainingSession(secondTrainingSession);
+        timetable.addNewTrainingSession(thirdTrainingSession);
+
+
+        assertEquals(1, timetable.getCountByCoaches().size());
+        assertEquals(3, timetable.getCountByCoaches().get(coach));
+    }
+
+    @Test
+    void testGetCountByCoachesSortsByCountDescending() {
+        Timetable timetable = new Timetable();
+
+        Coach coachWithThreeSessions = new Coach("Иванов", "Иван", "Иваныч");
+        Coach coachWithTwoSessions = new Coach("Петров", "Пётр", "Петрович");
+        Coach coachWithOneSession = new Coach("Сидоров", "Сидор", "Сидорович");
+
+        Group group1 = new Group("Группа 1", CHILD, 60);
+        TrainingSession trainingSession1 = new TrainingSession(
+                group1,
+                coachWithThreeSessions,
+                MONDAY,
+                new TimeOfDay(10, 0)
+        );
+        Group group2 = new Group("Группа 2", CHILD, 60);
+        TrainingSession trainingSession2 = new TrainingSession(
+                group2,
+                coachWithThreeSessions,
+                TUESDAY,
+                new TimeOfDay(10, 0)
+        );
+        Group group3 = new Group("Группа 3", ADULT, 90);
+        TrainingSession trainingSession3 = new TrainingSession(
+                group3,
+                coachWithThreeSessions,
+                WEDNESDAY,
+                new TimeOfDay(10, 0)
+        );
+        Group group4 = new Group("Группа 4", CHILD, 60);
+        TrainingSession trainingSession4 = new TrainingSession(
+                group4,
+                coachWithTwoSessions,
+                THURSDAY,
+                new TimeOfDay(10, 0)
+        );
+        Group group5 = new Group("Группа 5", ADULT, 90);
+        TrainingSession trainingSession5 = new TrainingSession(
+                group5,
+                coachWithTwoSessions,
+                FRIDAY,
+                new TimeOfDay(10, 0)
+        );
+        Group group6 = new Group("Группа 6", CHILD, 60);
+        TrainingSession trainingSession6 = new TrainingSession(
+                group6,
+                coachWithOneSession,
+                SATURDAY,
+                new TimeOfDay(10, 0)
+        );
+
+
+        timetable.addNewTrainingSession(trainingSession1);
+        timetable.addNewTrainingSession(trainingSession2);
+        timetable.addNewTrainingSession(trainingSession3);
+        timetable.addNewTrainingSession(trainingSession4);
+        timetable.addNewTrainingSession(trainingSession5);
+        timetable.addNewTrainingSession(trainingSession6);
+
+
+        var result = timetable.getCountByCoaches();
+        List<Coach> coachesInOrder = new ArrayList<>(result.keySet());
+
+        assertEquals(
+                List.of(coachWithThreeSessions, coachWithTwoSessions, coachWithOneSession),
+                coachesInOrder
+        );
+        assertEquals(List.of(3, 2, 1), new ArrayList<>(result.values()));
     }
 
 }

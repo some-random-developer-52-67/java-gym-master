@@ -11,7 +11,12 @@ public class TrainingSession {
     //время начала занятия
     private TimeOfDay timeOfDay;
 
-    public TrainingSession(Group group, Coach coach, DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
+    public TrainingSession(
+            Group group,
+            Coach coach,
+            DayOfWeek dayOfWeek,
+            TimeOfDay timeOfDay
+    ) {
         this.group = group;
         this.coach = coach;
         this.dayOfWeek = dayOfWeek;
